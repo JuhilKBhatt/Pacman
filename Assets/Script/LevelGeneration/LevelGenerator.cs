@@ -33,8 +33,27 @@ public class LevelGenerator : MonoBehaviour
         {0,0,0,0,0,0,5,0,0,0,4,0,0,0},
     };
 
-    public float tileSize = 1.0f;
+    /// The level Rotation (Top Left Only)
+    private float[,] rotationMap = 
+    {
+        {90, 270, 270, 270, 270, 270, 270, 270, 270, 270, 270, 270, 270, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 180},
+        {0, 0, 90, 90, 90, 0, 0, 90, 90, 90, 90, 0, 0, 180},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 180},
+        {0, 0, 180, 90, 90, 270, 0, 180, 90, 90, 90, 270, 0, 180},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 90, 90, 90, 0, 0, 90, 0, 0, 90, 90, 90, 90},
+        {0, 0, 180, 90, 90, 270, 0, 0, 0, 0, 180, 90, 90, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {180, 90, 90, 90, 90, 0, 0, 0, 180, 90, 90, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 270, 0, 180},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 90, 90, 90, 0},
+        {90, 90, 90, 90, 90, 270, 0, 180, 270, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    };
 
+    public float tileSize = 1.0f;
 
     void Start()
     {
@@ -54,102 +73,109 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-void GenerateLevel()
-{
-    int originalHeight = levelMap.GetLength(0);
-    int originalWidth = levelMap.GetLength(1);
-
-    // Full 2-Dimensions
-    int fullHeight = originalHeight * 2;
-    int fullWidth = originalWidth * 2;
-
-    // Set Size for new 2D array to store full map
-    int[,] fullLevelMap = new int[fullHeight, fullWidth];
-
-    // Fill top left
-    for (int y = 0; y < originalHeight; y++)
+    void GenerateLevel()
     {
-        for (int x = 0; x < originalWidth; x++)
-        {
-            fullLevelMap[y, x] = levelMap[y, x];
-        }
-    }
+        int originalHeight = levelMap.GetLength(0);
+        int originalWidth = levelMap.GetLength(1);
 
-    // Fill top right
-    for (int y = 0; y < originalHeight; y++)
-    {
-        for (int x = 0; x < originalWidth; x++)
-        {
-            fullLevelMap[y, fullWidth - 1 - x] = levelMap[y, x];
-        }
-    }
+        // Full 2-Dimensions
+        int fullHeight = originalHeight * 2;
+        int fullWidth = originalWidth * 2;
 
-    // Fill bottom left
-    for (int y = 0; y < originalHeight; y++)
-    {
-        for (int x = 0; x < originalWidth; x++)
-        {
-            fullLevelMap[fullHeight - 1 - y, x] = levelMap[y, x];
-        }
-    }
+        // Set Size for new 2D array to store full map
+        int[,] fullLevelMap = new int[fullHeight, fullWidth];
+        float[,] fullRotationMap = new float[fullHeight, fullWidth];
 
-    // Fill bottom right
-    for (int y = 0; y < originalHeight; y++)
-    {
-        for (int x = 0; x < originalWidth; x++)
+        // Fill top left
+        for (int y = 0; y < originalHeight; y++)
         {
-            fullLevelMap[fullHeight - 1 - y, fullWidth - 1 - x] = levelMap[y, x];
-        }
-    }
-
-    // Iterate fullLevelMap Array and generate the tiles
-    for (int y = 0; y < fullHeight; y++)
-    {
-        for (int x = 0; x < fullWidth; x++)
-        {
-            // Get the tile current position
-            int tileType = fullLevelMap[y, x];
-
-            // Determine which sprite to use
-            Sprite selectedSprite = null;
-            switch (tileType)
+            for (int x = 0; x < originalWidth; x++)
             {
-                case 0:
-                    selectedSprite = null;
-                    break;
-                case 1:
-                    selectedSprite = outsideCornerSprite;
-                    break;
-                case 2:
-                    selectedSprite = outsideWallSprite;
-                    break;
-                case 3:
-                    selectedSprite = insideCornerSprite;
-                    break;
-                case 4:
-                    selectedSprite = insideWallSprite;
-                    break;
-                case 5:
-                    selectedSprite = standardPelletSprite;
-                    break;
-                case 6:
-                    selectedSprite = powerPelletSprite;
-                    break;
-                case 7:
-                    selectedSprite = tJunctionSprite;
-                    break;
-            }
-
-            // Instantiate a new tile
-            if (selectedSprite != null)
-            {
-                GameObject newTile = new GameObject("Tile_" + x + "_" + y);
-                SpriteRenderer spriteRenderer = newTile.AddComponent<SpriteRenderer>();
-                spriteRenderer.sprite = selectedSprite;
-                newTile.transform.position = new Vector3(x * tileSize, -y * tileSize, 0);
-                newTile.tag = "MapTile";
+                fullLevelMap[y, x] = levelMap[y, x];
+                fullRotationMap[y, x] = rotationMap[y, x]; 
             }
         }
+
+        // Fill top right
+        for (int y = 0; y < originalHeight; y++)
+        {
+            for (int x = 0; x < originalWidth; x++)
+            {
+                fullLevelMap[y, fullWidth - 1 - x] = levelMap[y, x];
+                fullRotationMap[y, fullWidth - 1 - x] = (rotationMap[y, x] + 180) % 360;
+            }
+        }
+
+        // Fill bottom left
+        for (int y = 0; y < originalHeight; y++)
+        {
+            for (int x = 0; x < originalWidth; x++)
+            {
+                fullLevelMap[fullHeight - 2 - y, x] = levelMap[y, x];
+                fullRotationMap[fullHeight - 2 - y, x] = (rotationMap[y, x] + 180) % 360;
+            }
+        }
+
+        // Fill bottom right
+        for (int y = 0; y < originalHeight; y++)
+        {
+            for (int x = 0; x < originalWidth; x++)
+            {
+                fullLevelMap[fullHeight - 2 - y, fullWidth - 1 - x] = levelMap[y, x];
+                fullRotationMap[fullHeight - 2 - y, fullWidth - 1 - x] = rotationMap[y, x];
+            }
+        }
+
+        // Iterate fullLevelMap array and generate the tiles
+        for (int y = 0; y < fullHeight; y++)
+        {
+            for (int x = 0; x < fullWidth; x++)
+            {
+                // Getimg current position
+                int tileType = fullLevelMap[y, x];
+
+                // Determine which sprite to use
+                Sprite selectedSprite = null;
+                switch (tileType)
+                {
+                    case 0:
+                        selectedSprite = null;
+                        break;
+                    case 1:
+                        selectedSprite = outsideCornerSprite;
+                        break;
+                    case 2:
+                        selectedSprite = outsideWallSprite;
+                        break;
+                    case 3:
+                        selectedSprite = insideCornerSprite;
+                        break;
+                    case 4:
+                        selectedSprite = insideWallSprite;
+                        break;
+                    case 5:
+                        selectedSprite = standardPelletSprite;
+                        break;
+                    case 6:
+                        selectedSprite = powerPelletSprite;
+                        break;
+                    case 7:
+                        selectedSprite = tJunctionSprite;
+                        break;
+                }
+
+                // Instantiate a new tile
+                if (selectedSprite != null)
+                {
+                    GameObject newTile = new GameObject("Tile_" + x + "_" + y);
+                    SpriteRenderer spriteRenderer = newTile.AddComponent<SpriteRenderer>();
+                    spriteRenderer.sprite = selectedSprite;
+                    newTile.transform.position = new Vector3(x * tileSize, -y * tileSize, 0);
+                    newTile.transform.rotation = Quaternion.Euler(0, 0, fullRotationMap[y, x]);
+
+                    newTile.tag = "MapTile";
+                }
+            }
+        }
     }
-}
 }
