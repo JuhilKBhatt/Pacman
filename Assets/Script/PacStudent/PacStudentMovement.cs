@@ -18,7 +18,7 @@ public class PacStudentMovement : MonoBehaviour
     private int currentTarget = 0;
 
     // Movement radius (2f in all direction)
-    public float moveDistance = 2f;
+    public float moveDistance = 3.5f;
 
     void Start()
     {
