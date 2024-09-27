@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    // A reference to the different sprites (these will need to be assigned in the Unity Inspector)
-    public Sprite outsideCornerSprite; // 1 - Outside corner
-    public Sprite outsideWallSprite; // 2 - Outside wall
-    public Sprite insideCornerSprite; // 3 - Inside corner
-    public Sprite insideWallSprite; // 4 - Inside wall
-    public Sprite standardPelletSprite; // 5 - Empty space with Standard pellet
-    public Sprite powerPelletSprite; // 6 - Empty space with Power pellet
-    public Sprite tJunctionSprite; // 7 - T junction
+    // A reference to the sprites
+    public Sprite outsideCornerSprite; // 1
+    public Sprite outsideWallSprite; // 2
+    public Sprite insideCornerSprite; // 3
+    public Sprite insideWallSprite; // 4
+    public Sprite standardPelletSprite; // 5
+    public Sprite powerPelletSprite; // 6
+    public Sprite tJunctionSprite; // 7
 
-    // The level layout (copied from your provided 2D array)
+    // The level layout (Top Left Only)
     private int[,] levelMap = 
     {
         {1,2,2,2,2,2,2,2,2,2,2,2,2,7},
@@ -33,21 +33,20 @@ public class LevelGenerator : MonoBehaviour
         {0,0,0,0,0,0,5,0,0,0,4,0,0,0},
     };
 
-    // Tile size (used to space the tiles correctly)
     public float tileSize = 1.0f;
+
 
     void Start()
     {
-        // Delete the existing level (if any) before generating the new one
+        // Delete existing level
         ClearExistingLevel();
 
-        // Generate the level
+        // Procedurally generate level
         GenerateLevel();
     }
 
     void ClearExistingLevel()
     {
-        // Find all objects with tag "MapTile" and delete them
         GameObject[] existingTiles = GameObject.FindGameObjectsWithTag("MapTile");
         foreach (GameObject tile in existingTiles)
         {
@@ -57,18 +56,17 @@ public class LevelGenerator : MonoBehaviour
 
 void GenerateLevel()
 {
-    // First, create a mirrored version of the level map for horizontal and vertical symmetry
     int originalHeight = levelMap.GetLength(0);
     int originalWidth = levelMap.GetLength(1);
 
-    // Calculate full dimensions
+    // Full 2-Dimensions
     int fullHeight = originalHeight * 2;
     int fullWidth = originalWidth * 2;
 
-    // Create a new 2D array to store the full map (with 4 quadrants)
+    // Set Size for new 2D array to store full map
     int[,] fullLevelMap = new int[fullHeight, fullWidth];
 
-    // Fill the top-left quadrant (original map)
+    // Fill top left
     for (int y = 0; y < originalHeight; y++)
     {
         for (int x = 0; x < originalWidth; x++)
@@ -77,85 +75,78 @@ void GenerateLevel()
         }
     }
 
-    // Fill the top-right quadrant (horizontally mirrored)
+    // Fill top right
     for (int y = 0; y < originalHeight; y++)
     {
         for (int x = 0; x < originalWidth; x++)
         {
-            fullLevelMap[y, fullWidth - 1 - x] = levelMap[y, x];  // Mirror horizontally
+            fullLevelMap[y, fullWidth - 1 - x] = levelMap[y, x];
         }
     }
 
-    // Fill the bottom-left quadrant (vertically mirrored)
+    // Fill bottom left
     for (int y = 0; y < originalHeight; y++)
     {
         for (int x = 0; x < originalWidth; x++)
         {
-            fullLevelMap[fullHeight - 1 - y, x] = levelMap[y, x];  // Mirror vertically
+            fullLevelMap[fullHeight - 1 - y, x] = levelMap[y, x];
         }
     }
 
-    // Fill the bottom-right quadrant (both horizontally and vertically mirrored)
+    // Fill bottom right
     for (int y = 0; y < originalHeight; y++)
     {
         for (int x = 0; x < originalWidth; x++)
         {
-            fullLevelMap[fullHeight - 1 - y, fullWidth - 1 - x] = levelMap[y, x];  // Mirror both
+            fullLevelMap[fullHeight - 1 - y, fullWidth - 1 - x] = levelMap[y, x];
         }
     }
 
-    // Now we iterate over the fullLevelMap and generate the tiles as before
+    // Iterate fullLevelMap Array and generate the tiles
     for (int y = 0; y < fullHeight; y++)
     {
         for (int x = 0; x < fullWidth; x++)
         {
-            // Get the tile type at the current position
+            // Get the tile current position
             int tileType = fullLevelMap[y, x];
 
             // Determine which sprite to use
             Sprite selectedSprite = null;
             switch (tileType)
             {
-                case 0: // Empty space
-                    selectedSprite = null; // No sprite for empty spaces
+                case 0:
+                    selectedSprite = null;
                     break;
-                case 1: // Outside corner
+                case 1:
                     selectedSprite = outsideCornerSprite;
                     break;
-                case 2: // Outside wall
+                case 2:
                     selectedSprite = outsideWallSprite;
                     break;
-                case 3: // Inside corner
+                case 3:
                     selectedSprite = insideCornerSprite;
                     break;
-                case 4: // Inside wall
+                case 4:
                     selectedSprite = insideWallSprite;
                     break;
-                case 5: // Standard pellet
+                case 5:
                     selectedSprite = standardPelletSprite;
                     break;
-                case 6: // Power pellet
+                case 6:
                     selectedSprite = powerPelletSprite;
                     break;
-                case 7: // T junction
+                case 7:
                     selectedSprite = tJunctionSprite;
                     break;
             }
 
-            // Instantiate a new tile if there's a sprite to render
+            // Instantiate a new tile
             if (selectedSprite != null)
             {
-                // Create a new GameObject to hold the sprite
                 GameObject newTile = new GameObject("Tile_" + x + "_" + y);
-
-                // Add a SpriteRenderer component and assign the sprite to it
                 SpriteRenderer spriteRenderer = newTile.AddComponent<SpriteRenderer>();
                 spriteRenderer.sprite = selectedSprite;
-
-                // Set the position of the tile using X and Y, Z fixed at 0
                 newTile.transform.position = new Vector3(x * tileSize, -y * tileSize, 0);
-
-                // Tag the new tile so it can be deleted later
                 newTile.tag = "MapTile";
             }
         }
