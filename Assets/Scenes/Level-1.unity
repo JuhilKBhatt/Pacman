@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 53278038}
   m_Layer: 0
   m_Name: Level-1
-  m_TagString: Untagged
+  m_TagString: MapTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8079,6 +8079,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1359622469}
   - component: {fileID: 1359622468}
+  - component: {fileID: 1359622470}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -8115,6 +8116,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1359622470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359622467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb65ae5d699641c1b196d83cadd7655, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outsideCornerSprite: {fileID: -732047912, guid: 7d7fb6fa55b3b4cebb6e8e7719a47427, type: 3}
+  outsideWallSprite: {fileID: 939533901, guid: 7d7fb6fa55b3b4cebb6e8e7719a47427, type: 3}
+  insideCornerSprite: {fileID: 2068490106, guid: 7d7fb6fa55b3b4cebb6e8e7719a47427, type: 3}
+  insideWallSprite: {fileID: -1689279496, guid: 7d7fb6fa55b3b4cebb6e8e7719a47427, type: 3}
+  standardPelletSprite: {fileID: -1727645977, guid: 7d7fb6fa55b3b4cebb6e8e7719a47427, type: 3}
+  powerPelletSprite: {fileID: 1471106410, guid: 7d7fb6fa55b3b4cebb6e8e7719a47427, type: 3}
+  tJunctionSprite: {fileID: -578157485, guid: 7d7fb6fa55b3b4cebb6e8e7719a47427, type: 3}
+  tileSize: 1
 --- !u!1 &1362726597
 GameObject:
   m_ObjectHideFlags: 0
