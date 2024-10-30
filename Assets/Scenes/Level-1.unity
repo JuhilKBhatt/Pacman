@@ -6954,6 +6954,7 @@ GameObject:
   - component: {fileID: 73937937}
   - component: {fileID: 73937936}
   - component: {fileID: 73937940}
+  - component: {fileID: 73937941}
   m_Layer: 6
   m_Name: PacStudent
   m_TagString: Untagged
@@ -7100,6 +7101,20 @@ MonoBehaviour:
   animator: {fileID: 73937936}
   NotEatting: {fileID: 858765288}
   moveDistance: 2.4
+--- !u!114 &73937941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73937935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d79d80c9715f45f6a07a2236065409c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 5
+  lastInput: 0
 --- !u!1 &131093598
 GameObject:
   m_ObjectHideFlags: 0
