@@ -10,8 +10,11 @@ public class PacStudentController : MonoBehaviour
     public Animator animator; // All Movement Animations
 
     // Sounds
-    public AudioSource NotEatting;
-    public AudioSource Eatting;
+    public AudioSource NotEating;
+    public AudioSource Eating;
+
+    // Particle system for dust effect
+    public ParticleSystem dustEffect; // Reference to the dust effect particle system
 
     // Track last and current input directions
     private KeyCode lastInput;   
@@ -71,7 +74,7 @@ public class PacStudentController : MonoBehaviour
             targetPosition = newTargetPosition;
             isLerping = true;
             PlayMovementAudio();
-            PlayDustEffect();
+            PlayDustEffect(); // Trigger the dust effect when starting to move
         }
     }
 
@@ -90,19 +93,23 @@ public class PacStudentController : MonoBehaviour
 
     private void PlayMovementAudio()
     {
-        if (!NotEatting.isPlaying)
+        if (!NotEating.isPlaying)
         {
-            NotEatting.Play();
+            NotEating.Play();
         }
-        
-        if (!Eatting.isPlaying)
+        else
         {
-            Eatting.Play();
+            Eating.Play();
         }
     }
 
     private void PlayDustEffect()
     {
-        // Placeholder for dust effect logic
+        if (dustEffect != null)
+        {
+            // Play dust particle effect at PacStudent's position
+            dustEffect.transform.position = transform.position;
+            dustEffect.Play();
+        }
     }
 }
