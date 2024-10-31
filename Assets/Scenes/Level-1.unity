@@ -13954,6 +13954,7 @@ GameObject:
   - component: {fileID: 1359622469}
   - component: {fileID: 1359622468}
   - component: {fileID: 1359622470}
+  - component: {fileID: 1359622471}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -14009,6 +14010,21 @@ MonoBehaviour:
   powerPelletSprite: {fileID: 1471106410, guid: 7d7fb6fa55b3b4cebb6e8e7719a47427, type: 3}
   tJunctionSprite: {fileID: -578157485, guid: 7d7fb6fa55b3b4cebb6e8e7719a47427, type: 3}
   tileSize: 1
+--- !u!114 &1359622471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1359622467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e967386d1a3441bb861eb10639927a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cherryPrefab: {fileID: 5949398600016839095, guid: c4d4d66b09481487e9622fc039216445, type: 3}
+  spawnInterval: 10
+  moveSpeed: 3
 --- !u!1 &1380948587
 GameObject:
   m_ObjectHideFlags: 0
