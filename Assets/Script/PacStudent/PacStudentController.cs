@@ -75,6 +75,9 @@ public class PacStudentController : MonoBehaviour
             isLerping = true;
             PlayMovementAudio();
             PlayDustEffect(); // Trigger the dust effect when starting to move
+
+            // Rotate PacStudent to face the direction of movement
+            RotatePacStudent(direction);
         }
     }
 
@@ -89,6 +92,31 @@ public class PacStudentController : MonoBehaviour
         else if (direction == KeyCode.D) offset = new Vector3(cellSize, 0, 0);
 
         return transform.position + offset;
+    }
+
+    private void RotatePacStudent(KeyCode direction)
+    {
+        // Rotate PacStudent based on movement direction
+        if (direction == KeyCode.W)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 90); // Up
+            transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
+        }
+        else if (direction == KeyCode.A)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0); // Left (rotation remains 0)
+            transform.localScale = new Vector3(-1, 1, 1); // Flip on X-axis
+        }
+        else if (direction == KeyCode.S)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 270); // Down
+            transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
+        }
+        else if (direction == KeyCode.D)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0); // Right
+            transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
+        }
     }
 
     private void PlayMovementAudio()
