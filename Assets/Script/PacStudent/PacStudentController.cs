@@ -4,63 +4,49 @@ using UnityEngine;
 
 public class PacStudentController : MonoBehaviour
 {
-    public float moveSpeed = 5f; // Speed of lerp movement
-    private Vector3 targetPosition; // Target position for lerp movement
-    private bool isLerping = false; // Track if PacStudent is moving
+    public float moveSpeed = 5f;  // Speed of movement
+    private Vector3 targetPosition;  // Target position for lerping
+    private bool isLerping = false;  // Indicates if PacStudent is currently moving
+    public Animator animator; // All Movement Animations
 
-    private Vector2Int gridPosition; // PacStudent’s current grid position
-    public KeyCode lastInput; // Stores the last key pressed
-    private KeyCode currentInput; // Current direction PacStudent is moving
+    // Sounds
+    public AudioSource NotEatting;
+    public AudioSource Eatting;
 
-    // Level map setup (5 represents walkable, other numbers represent walls or other obstacles)
-    private int[,] levelMap = 
-    {
-        {1,2,2,2,2,2,2,2,2,2,2,2,2,7},
-        {2,5,5,5,5,5,5,5,5,5,5,5,5,4},
-        {2,5,3,4,4,3,5,3,4,4,4,3,5,4},
-        {2,6,4,0,0,4,5,4,0,0,0,4,5,4},
-        {2,5,3,4,4,3,5,3,4,4,4,3,5,3},
-        {2,5,5,5,5,5,5,5,5,5,5,5,5,5},
-        {2,5,3,4,4,3,5,3,3,5,3,4,4,4},
-        {2,5,3,4,4,3,5,4,4,5,3,4,4,3},
-        {2,5,5,5,5,5,5,4,4,5,5,5,5,4},
-        {1,2,2,2,2,1,5,4,3,4,4,3,0,4},
-        {0,0,0,0,0,2,5,4,3,4,4,3,0,3},
-        {0,0,0,0,0,2,5,4,4,0,0,0,0,0},
-        {0,0,0,0,0,2,5,4,4,0,3,4,4,0},
-        {2,2,2,2,2,1,5,3,3,0,4,0,0,0},
-        {0,0,0,0,0,0,5,0,0,0,4,0,0,0},
-    };
+    // Track last and current input directions
+    private KeyCode lastInput;   
+    private KeyCode currentInput; 
+
+    private float cellSize = 1f; // Size of each cell in world units
 
     private void Start()
     {
-        gridPosition = new Vector2Int(2, 2); // Starting grid position
-        targetPosition = new Vector3(gridPosition.x, gridPosition.y, 0);
-        transform.position = targetPosition; // Initialize position
+        targetPosition = transform.position; // Start at the current position
     }
 
     private void Update()
     {
         HandleInput();
-        
+
+        // Move if not currently lerping to a new position
         if (!isLerping)
         {
             TryMove(lastInput);
 
-            if (!isLerping) // If movement didn't start, try moving in currentInput direction
+            if (!isLerping) // If not moving, try moving in the current input direction
             {
                 TryMove(currentInput);
             }
         }
         else
         {
-            // Lerp towards the target position
-            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * moveSpeed);
+            // Smoothly lerp towards the target position
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * moveSpeed);
             
+            // Snap to target position when close enough, and stop lerping
             if (Vector3.Distance(transform.position, targetPosition) < 0.01f)
             {
-                transform.position = targetPosition; // Snap to the target
-                gridPosition = new Vector2Int((int)targetPosition.x, (int)targetPosition.y);
+                transform.position = targetPosition;
                 isLerping = false;
             }
         }
@@ -76,42 +62,47 @@ public class PacStudentController : MonoBehaviour
 
     private void TryMove(KeyCode direction)
     {
-        Vector2Int targetGridPosition = GetAdjacentGridPosition(direction);
+        Vector3 newTargetPosition = GetAdjacentWorldPosition(direction);
 
-        // Check if target position is within bounds and walkable (where 5 is walkable)
-        if (IsWalkable(targetGridPosition))
+        // Set the new position as the target if it's different from the current one
+        if (newTargetPosition != transform.position)
         {
             currentInput = direction;
-            targetPosition = new Vector3(targetGridPosition.x, targetGridPosition.y, 0);
+            targetPosition = newTargetPosition;
             isLerping = true;
-            PlayMovementAudio(); // Play movement sound
-            PlayDustEffect(); // Play dust effect
+            PlayMovementAudio();
+            PlayDustEffect();
         }
     }
 
-    private Vector2Int GetAdjacentGridPosition(KeyCode direction)
+    private Vector3 GetAdjacentWorldPosition(KeyCode direction)
     {
-        if (direction == KeyCode.W) return gridPosition + Vector2Int.up;
-        if (direction == KeyCode.A) return gridPosition + Vector2Int.left;
-        if (direction == KeyCode.S) return gridPosition + Vector2Int.down;
-        if (direction == KeyCode.D) return gridPosition + Vector2Int.right;
-        return gridPosition;
-    }
+        Vector3 offset = Vector3.zero;
 
-    private bool IsWalkable(Vector2Int gridPos)
-    {
-        if (gridPos.x < 0 || gridPos.y < 0 || gridPos.x >= levelMap.GetLength(0) || gridPos.y >= levelMap.GetLength(1))
-            return false; // Out of bounds
-        return levelMap[gridPos.y, gridPos.x] == 5; // 5 represents walkable areas
+        // Adjust the target position based on input direction
+        if (direction == KeyCode.W) offset = new Vector3(0, cellSize, 0);
+        else if (direction == KeyCode.A) offset = new Vector3(-cellSize, 0, 0);
+        else if (direction == KeyCode.S) offset = new Vector3(0, -cellSize, 0);
+        else if (direction == KeyCode.D) offset = new Vector3(cellSize, 0, 0);
+
+        return transform.position + offset;
     }
 
     private void PlayMovementAudio()
     {
-        // Placeholder for movement audio logic
+        if (!NotEatting.isPlaying)
+        {
+            NotEatting.Play();
+        }
+        
+        if (!Eatting.isPlaying)
+        {
+            Eatting.Play();
+        }
     }
 
     private void PlayDustEffect()
     {
-        // Placeholder for dust particle effect logic
+        // Placeholder for dust effect logic
     }
 }
