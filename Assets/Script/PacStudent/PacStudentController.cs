@@ -135,8 +135,25 @@ public class PacStudentController : MonoBehaviour
     {
         if (dustEffect != null)
         {
-            // Play dust particle effect at PacStudent's position
-            dustEffect.transform.position = transform.position;
+            // Adjust dust effect position based on direction of movement
+            Vector3 dustOffset = Vector3.zero;
+            
+            if (currentInput == KeyCode.W)      // Moving Up
+                dustOffset = new Vector3(0, -0.5f, 0);
+            else if (currentInput == KeyCode.S) // Moving Down
+                dustOffset = new Vector3(0, 0.5f, 0);
+            else if (currentInput == KeyCode.A) // Moving Left
+                dustOffset = new Vector3(0.5f, 0, 0);
+            else if (currentInput == KeyCode.D) // Moving Right
+                dustOffset = new Vector3(-0.5f, 0, 0);
+
+            // Position dust effect relative to the PacStudent's position
+            dustEffect.transform.position = transform.position + dustOffset;
+            
+            // Reset rotation to ensure it faces the camera
+            dustEffect.transform.rotation = Quaternion.identity;
+
+            // Play dust particle effect
             dustEffect.Play();
         }
     }
