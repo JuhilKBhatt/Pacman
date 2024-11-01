@@ -4,23 +4,45 @@ using UnityEngine;
 
 public class PacStudentController : MonoBehaviour
 {
-    public float moveSpeed = 5f;  // Speed of movement
-    private Vector3 targetPosition;  // Target position for lerping
-    private bool isLerping = false;  // Indicates if PacStudent is currently moving
-    public Animator animator; // All Movement Animations
+    public float moveSpeed = 5f;         // Speed of movement
+    private Vector3 targetPosition;      // Target position for lerping
+    private bool isLerping = false;      // Indicates if PacStudent is currently moving
+    public Animator animator;            // All Movement Animations
 
     // Sounds
     public AudioSource NotEating;
     public AudioSource Eating;
 
     // Particle system for dust effect
-    public ParticleSystem dustEffect; // Reference to the dust effect particle system
+    public ParticleSystem dustEffect;    // Reference to the dust effect particle system
 
     // Track last and current input directions
     private KeyCode lastInput;   
     private KeyCode currentInput; 
 
-    private float cellSize = 1f; // Size of each cell in world units
+    private float cellSize = 1f;         // Size of each cell in world units
+
+    // Offset position of the top-left corner of levelMap in world coordinates
+    private Vector3 mapOrigin = new Vector3(-15, 14, 0);
+
+    // Level map
+    private int[,] levelMap = {
+        {1,2,2,2,2,2,2,2,2,2,2,2,2,7},
+        {2,5,5,5,5,5,5,5,5,5,5,5,5,4},
+        {2,5,3,4,4,3,5,3,4,4,4,3,5,4},
+        {2,6,4,0,0,4,5,4,0,0,0,4,5,4},
+        {2,5,3,4,4,3,5,3,4,4,4,3,5,3},
+        {2,5,5,5,5,5,5,5,5,5,5,5,5,5},
+        {2,5,3,4,4,3,5,3,3,5,3,4,4,4},
+        {2,5,3,4,4,3,5,4,4,5,3,4,4,3},
+        {2,5,5,5,5,5,5,4,4,5,5,5,5,4},
+        {1,2,2,2,2,1,5,4,3,4,4,3,0,4},
+        {0,0,0,0,0,2,5,4,3,4,4,3,0,3},
+        {0,0,0,0,0,2,5,4,4,0,0,0,0,0},
+        {0,0,0,0,0,2,5,4,4,0,3,4,4,0},
+        {2,2,2,2,2,1,5,3,3,0,4,0,0,0},
+        {0,0,0,0,0,0,5,0,0,0,4,0,0,0}
+    };
 
     private void Start()
     {
@@ -67,16 +89,14 @@ public class PacStudentController : MonoBehaviour
     {
         Vector3 newTargetPosition = GetAdjacentWorldPosition(direction);
 
-        // Set the new position as the target if it's different from the current one
-        if (newTargetPosition != transform.position)
+        // Check if target cell is valid (5 or 6)
+        if (IsValidMove(newTargetPosition))
         {
             currentInput = direction;
             targetPosition = newTargetPosition;
             isLerping = true;
             PlayMovementAudio();
             PlayDustEffect(); // Trigger the dust effect when starting to move
-
-            // Rotate PacStudent to face the direction of movement
             RotatePacStudent(direction);
         }
     }
@@ -94,66 +114,58 @@ public class PacStudentController : MonoBehaviour
         return transform.position + offset;
     }
 
+    private bool IsValidMove(Vector3 newPosition)
+    {
+        // Convert world position to grid coordinates using the offset of mapOrigin
+        int gridX = Mathf.RoundToInt((newPosition.x - mapOrigin.x) / cellSize);
+        int gridY = Mathf.RoundToInt((mapOrigin.y - newPosition.y) / cellSize); // Invert Y due to top-left origin in map
+
+        // Check if grid position is within level bounds
+        if (gridX >= 0 && gridX < levelMap.GetLength(1) && gridY >= 0 && gridY < levelMap.GetLength(0))
+        {
+            int cellValue = levelMap[gridY, gridX];
+            return cellValue == 5 || cellValue == 6; // Allow movement only on cells marked as 5 or 6
+        }
+
+        return false;
+    }
+
     private void RotatePacStudent(KeyCode direction)
     {
-        // Rotate PacStudent based on movement direction
         if (direction == KeyCode.W)
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 90); // Up
-            transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
-        }
+            transform.rotation = Quaternion.Euler(0, 0, 90);    // Up
         else if (direction == KeyCode.A)
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 0); // Left (rotation remains 0)
-            transform.localScale = new Vector3(-1, 1, 1); // Flip on X-axis
-        }
+            transform.rotation = Quaternion.Euler(0, 0, 180);   // Left
         else if (direction == KeyCode.S)
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 270); // Down
-            transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
-        }
+            transform.rotation = Quaternion.Euler(0, 0, 270);   // Down
         else if (direction == KeyCode.D)
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 0); // Right
-            transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
-        }
+            transform.rotation = Quaternion.Euler(0, 0, 0);     // Right
     }
 
     private void PlayMovementAudio()
     {
         if (!NotEating.isPlaying)
-        {
             NotEating.Play();
-        }
         else
-        {
             Eating.Play();
-        }
     }
 
     private void PlayDustEffect()
     {
         if (dustEffect != null)
         {
-            // Adjust dust effect position based on direction of movement
             Vector3 dustOffset = Vector3.zero;
-            
-            if (currentInput == KeyCode.W)      // Moving Up
+            if (currentInput == KeyCode.W)
                 dustOffset = new Vector3(0, -0.5f, 0);
-            else if (currentInput == KeyCode.S) // Moving Down
+            else if (currentInput == KeyCode.S)
                 dustOffset = new Vector3(0, 0.5f, 0);
-            else if (currentInput == KeyCode.A) // Moving Left
+            else if (currentInput == KeyCode.A)
                 dustOffset = new Vector3(0.5f, 0, 0);
-            else if (currentInput == KeyCode.D) // Moving Right
+            else if (currentInput == KeyCode.D)
                 dustOffset = new Vector3(-0.5f, 0, 0);
 
-            // Position dust effect relative to the PacStudent's position
             dustEffect.transform.position = transform.position + dustOffset;
-            
-            // Reset rotation to ensure it faces the camera
             dustEffect.transform.rotation = Quaternion.identity;
-
-            // Play dust particle effect
             dustEffect.Play();
         }
     }
