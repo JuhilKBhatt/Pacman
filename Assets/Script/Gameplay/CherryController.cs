@@ -37,8 +37,11 @@ public class CherryController : MonoBehaviour
         // Instantiate the cherry and set its initial position
         GameObject cherry = Instantiate(cherryPrefab, spawnPosition, Quaternion.identity);
 
-        // Start moving the cherry toward the center of the level
-        StartCoroutine(MoveCherry(cherry));
+        // Calculate the target position on the opposite side of the screen
+        Vector2 targetPosition = GetOppositeSidePosition(spawnPosition);
+
+        // Start moving the cherry toward the target position
+        StartCoroutine(MoveCherry(cherry, targetPosition));
     }
 
     private Vector2 GetRandomSpawnPositionOutsideCamera()
@@ -60,20 +63,34 @@ public class CherryController : MonoBehaviour
         return spawnPositions[Random.Range(0, spawnPositions.Count)];
     }
 
-    private IEnumerator MoveCherry(GameObject cherry)
+    private Vector2 GetOppositeSidePosition(Vector2 spawnPosition)
     {
-        // Set the target position to the center of the level
-        Vector2 targetPosition = Vector2.zero;
+        // Calculate the camera bounds
+        float cameraHeight = 2f * mainCamera.orthographicSize;
+        float cameraWidth = cameraHeight * mainCamera.aspect;
 
+        // Determine target position on the opposite side of the screen
+        if (spawnPosition.x < mainCamera.transform.position.x - cameraWidth / 2) // Left side
+            return new Vector2(mainCamera.transform.position.x + cameraWidth / 2 + 1, spawnPosition.y);
+        else if (spawnPosition.x > mainCamera.transform.position.x + cameraWidth / 2) // Right side
+            return new Vector2(mainCamera.transform.position.x - cameraWidth / 2 - 1, spawnPosition.y);
+        else if (spawnPosition.y < mainCamera.transform.position.y - cameraHeight / 2) // Bottom side
+            return new Vector2(spawnPosition.x, mainCamera.transform.position.y + cameraHeight / 2 + 1);
+        else // Top side
+            return new Vector2(spawnPosition.x, mainCamera.transform.position.y - cameraHeight / 2 - 1);
+    }
+
+    private IEnumerator MoveCherry(GameObject cherry, Vector2 targetPosition)
+    {
         while (cherry != null)
         {
-            // Lerp the cherry's position toward the center of the screen
+            // Lerp the cherry's position toward the target position
             cherry.transform.position = Vector2.MoveTowards(cherry.transform.position, targetPosition, moveSpeed * Time.deltaTime);
 
             // Check if the cherry has reached the target
             if (Vector2.Distance(cherry.transform.position, targetPosition) < 0.1f)
             {
-                Destroy(cherry); // Destroy the cherry when it reaches the target
+                Destroy(cherry); // Destroy the cherry when it reaches the opposite side
                 yield break;
             }
 
