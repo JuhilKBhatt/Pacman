@@ -22,9 +22,6 @@ public class PacStudentController : MonoBehaviour
 
     private float cellSize = 1f;         // Size of each cell in world units
 
-    // Offset position of the top-left corner of levelMap in world coordinates
-    private Vector3 mapOrigin = new Vector3(-15, 14, 0);
-
     // Level map
     private int[,] levelMap = {
         {1,2,2,2,2,2,2,2,2,2,2,2,2,7},
@@ -44,16 +41,20 @@ public class PacStudentController : MonoBehaviour
         {0,0,0,0,0,0,5,0,0,0,4,0,0,0}
     };
 
+    private Vector2Int startingGridPosition = new Vector2Int(1, 0); // Second row, first column
+    private Vector3 gridOrigin = new Vector3(-15, 14, 0);           // World origin for the grid
+
     private void Start()
     {
-        targetPosition = transform.position; // Start at the current position
+        // Calculate PacStudent's starting position
+        targetPosition = GetWorldPositionFromGrid(startingGridPosition);
+        transform.position = targetPosition;
     }
 
     private void Update()
     {
         HandleInput();
 
-        // Move if not currently lerping to a new position
         if (!isLerping)
         {
             TryMove(lastInput);
@@ -89,57 +90,69 @@ public class PacStudentController : MonoBehaviour
     {
         Vector3 newTargetPosition = GetAdjacentWorldPosition(direction);
 
-        // Check if target cell is valid (5 or 6)
         if (IsValidMove(newTargetPosition))
         {
             currentInput = direction;
             targetPosition = newTargetPosition;
             isLerping = true;
             PlayMovementAudio();
-            PlayDustEffect(); // Trigger the dust effect when starting to move
+            PlayDustEffect();
             RotatePacStudent(direction);
         }
     }
 
     private Vector3 GetAdjacentWorldPosition(KeyCode direction)
     {
-        Vector3 offset = Vector3.zero;
+        Vector2Int offset = Vector2Int.zero;
 
-        // Adjust the target position based on input direction
-        if (direction == KeyCode.W) offset = new Vector3(0, cellSize, 0);
-        else if (direction == KeyCode.A) offset = new Vector3(-cellSize, 0, 0);
-        else if (direction == KeyCode.S) offset = new Vector3(0, -cellSize, 0);
-        else if (direction == KeyCode.D) offset = new Vector3(cellSize, 0, 0);
+        if (direction == KeyCode.W) offset = new Vector2Int(0, -1);
+        else if (direction == KeyCode.A) offset = new Vector2Int(-1, 0);
+        else if (direction == KeyCode.S) offset = new Vector2Int(0, 1);
+        else if (direction == KeyCode.D) offset = new Vector2Int(1, 0);
 
-        return transform.position + offset;
+        Vector2Int gridPosition = GetGridPositionFromWorld(transform.position);
+        Vector2Int newGridPosition = gridPosition + offset;
+        
+        return GetWorldPositionFromGrid(newGridPosition);
     }
 
     private bool IsValidMove(Vector3 newPosition)
     {
-        // Convert world position to grid coordinates using the offset of mapOrigin
-        int gridX = Mathf.RoundToInt((newPosition.x - mapOrigin.x) / cellSize);
-        int gridY = Mathf.RoundToInt((mapOrigin.y - newPosition.y) / cellSize); // Invert Y due to top-left origin in map
+        Vector2Int gridPosition = GetGridPositionFromWorld(newPosition);
 
-        // Check if grid position is within level bounds
-        if (gridX >= 0 && gridX < levelMap.GetLength(1) && gridY >= 0 && gridY < levelMap.GetLength(0))
+        if (gridPosition.x >= 0 && gridPosition.x < levelMap.GetLength(1) && gridPosition.y >= 0 && gridPosition.y < levelMap.GetLength(0))
         {
-            int cellValue = levelMap[gridY, gridX];
-            return cellValue == 5 || cellValue == 6; // Allow movement only on cells marked as 5 or 6
+            int cellValue = levelMap[gridPosition.y, gridPosition.x];
+            return cellValue == 5 || cellValue == 6 || cellValue == 0;
         }
 
         return false;
     }
 
+    private Vector2Int GetGridPositionFromWorld(Vector3 worldPosition)
+    {
+        int x = Mathf.RoundToInt((worldPosition.x - gridOrigin.x) / cellSize);
+        int y = Mathf.RoundToInt((gridOrigin.y - worldPosition.y) / cellSize);
+        return new Vector2Int(x, y);
+    }
+
+    private Vector3 GetWorldPositionFromGrid(Vector2Int gridPosition)
+    {
+        float worldX = gridOrigin.x + gridPosition.x * cellSize;
+        float worldY = gridOrigin.y - gridPosition.y * cellSize;
+        return new Vector3(worldX, worldY, 0);
+    }
+
     private void RotatePacStudent(KeyCode direction)
     {
         if (direction == KeyCode.W)
-            transform.rotation = Quaternion.Euler(0, 0, 90);    // Up
+            transform.rotation = Quaternion.Euler(0, 0, 90);
         else if (direction == KeyCode.A)
-            transform.rotation = Quaternion.Euler(0, 0, 180);   // Left
+            transform.rotation = Quaternion.Euler(0, 0, 180);
         else if (direction == KeyCode.S)
-            transform.rotation = Quaternion.Euler(0, 0, 270);   // Down
+            transform.rotation = Quaternion.Euler(0, 0, 270);
         else if (direction == KeyCode.D)
-            transform.rotation = Quaternion.Euler(0, 0, 0);     // Right
+            transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void PlayMovementAudio()
