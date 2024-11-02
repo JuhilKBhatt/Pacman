@@ -22,7 +22,7 @@ public class PacStudentController : MonoBehaviour
 
     private float cellSize = 1f;         // Size of each cell in world units
 
-    // Level map
+    // Define the base map (top-left quadrant) to be mirrored
     private int[,] levelMap = {
         {1,2,2,2,2,2,2,2,2,2,2,2,2,7},
         {2,5,5,5,5,5,5,5,5,5,5,5,5,4},
@@ -41,11 +41,44 @@ public class PacStudentController : MonoBehaviour
         {0,0,0,0,0,0,5,0,0,0,4,0,0,0}
     };
 
+    private int[,] CreateFourQuadrantMap(int[,] baseMap)
+    {
+        int rows = baseMap.GetLength(0);
+        int cols = baseMap.GetLength(1);
+
+        int[,] fullMap = new int[rows * 2, cols * 2];
+
+        // Fill the four quadrants
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                // Top-left quadrant (original map)
+                fullMap[i, j] = baseMap[i, j];
+
+                // Top-right quadrant (horizontal mirror)
+                fullMap[i, cols * 2 - j - 1] = baseMap[i, j];
+
+                // Bottom-left quadrant (vertical mirror)
+                fullMap[rows * 2 - i - 2, j] = baseMap[i, j];
+
+                // Bottom-right quadrant (horizontal + vertical mirror)
+                fullMap[rows * 2 - i - 2, cols * 2 - j - 1] = baseMap[i, j];
+            }
+        }
+
+        return fullMap;
+    }
+
     private Vector2Int startingGridPosition = new Vector2Int(1, 0); // Second row, first column
     private Vector3 gridOrigin = new Vector3(-15, 14, 0);           // World origin for the grid
 
+
     private void Start()
     {
+        // Generate the full 4-quadrant map
+        int[,] fullMap = CreateFourQuadrantMap(levelMap);
+        levelMap = fullMap;
         // Calculate PacStudent's starting position
         targetPosition = GetWorldPositionFromGrid(startingGridPosition);
     }
