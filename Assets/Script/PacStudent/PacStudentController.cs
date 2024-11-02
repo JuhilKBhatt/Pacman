@@ -13,15 +13,20 @@ public class PacStudentController : MonoBehaviour
     // Sounds
     public AudioSource NotEating;
     public AudioSource Eating;
+    public AudioSource WallCollision;
 
-    // Particle system for dust effect
     public ParticleSystem dustEffect;    // Reference to the dust effect particle system
+    public ParticleSystem wallCollisionEffect; // Reference to the wall collision effect particle system
 
     // Track last and current input directions
     private KeyCode lastInput;   
     private KeyCode currentInput; 
 
     private float cellSize = 1f;         // Size of each cell in world units
+
+    // Cooldown for wall collision handling
+    private float wallCollisionCooldown = 0.5f; // Cooldown duration in seconds
+    private float lastCollisionTime = 0f; // Tracks the last time a collision was handled
 
     // Define the base map (top-left quadrant) to be mirrored
     private int[,] levelMap = {
@@ -91,16 +96,20 @@ public class PacStudentController : MonoBehaviour
 
         if (!isLerping)
         {
+            // Store the previous position before trying to move
+            previousPosition = transform.position; 
+            
+            // Try to move PacStudent in the last input direction
             TryMove(lastInput);
 
-            if (!isLerping) // If not moving, try moving in the current input direction
+            // If not moving, try moving in the current input direction
+            if (!isLerping) 
             {
                 TryMove(currentInput);
             }
         }
         else
         {
-            previousPosition = transform.position; // Store the position before lerping
             // Smoothly lerp towards the target position
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * moveSpeed);
             
@@ -133,6 +142,8 @@ public class PacStudentController : MonoBehaviour
             PlayMovementAudio();
             PlayDustEffect();
             RotatePacStudent(direction);
+        }else{
+            HandleWallCollision();
         }
     }
 
@@ -207,6 +218,24 @@ public class PacStudentController : MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(0, 0, 0); // Right
             transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
+        }
+    }
+
+    private void HandleWallCollision()
+    {
+        // Reset position to previous position
+        transform.position = previousPosition; 
+        
+        // Play wall collision sound
+        WallCollision.Play();
+        
+        // Play wall collision particle effect
+        if (wallCollisionEffect != null)
+        {
+            // Instantiate particle effect at the position of collision
+            ParticleSystem effect = Instantiate(wallCollisionEffect, transform.position, Quaternion.identity);
+            effect.Play();
+            Destroy(effect.gameObject, effect.main.duration); // Clean up the effect after it finishes
         }
     }
 
