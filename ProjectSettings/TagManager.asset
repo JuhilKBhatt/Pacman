@@ -9,6 +9,10 @@ TagManager:
   - Pellet
   - PowerPill
   - ScoreText
+  - PinkGhost
+  - BlueGhost
+  - OrangeGhost
+  - RedGhost
   layers:
   - Default
   - TransparentFX

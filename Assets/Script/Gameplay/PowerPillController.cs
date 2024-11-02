@@ -1,14 +1,12 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class PowerPillController : MonoBehaviour
 {
     public Animator[] ghostAnimators;       // Array of Ghost animators
-    public AudioSource normalMusic;         // Normal background music
     public AudioSource scaredMusic;         // Scared mode background music
-    public TextMeshProUGUI ghostTimerUI;               // UI Text for displaying timer
+    public TextMeshProUGUI ghostTimerUI;    // UI Text for displaying timer
     public float powerPillDuration = 10f;   // Total duration of power pill effect
 
     private float timer;                    // Internal timer for countdown
@@ -33,7 +31,6 @@ public class PowerPillController : MonoBehaviour
         {
             ghostAnimator.SetTrigger("Scared");
         }
-        normalMusic.Stop();
         scaredMusic.Play();
 
         // Show timer UI and set the timer
@@ -66,9 +63,8 @@ public class PowerPillController : MonoBehaviour
             ghostAnimator.SetTrigger("Walking");
         }
 
-        // Hide timer UI and stop scared music, then resume normal music
+        // Hide timer UI and stop scared music
         ghostTimerUI.gameObject.SetActive(false);
         scaredMusic.Stop();
-        normalMusic.Play();
     }
 }

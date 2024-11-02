@@ -11,8 +11,6 @@ public class PacStudentController : MonoBehaviour
     public Animator animator;            // All Movement Animations
 
     // Sounds
-    public AudioSource NotEating;
-    public AudioSource Eating;
     public AudioSource WallCollision;
 
     public ParticleSystem dustEffect;    // Reference to the dust effect particle system
@@ -136,7 +134,6 @@ public class PacStudentController : MonoBehaviour
             currentInput = direction;
             targetPosition = newTargetPosition;
             isLerping = true;
-            PlayMovementAudio();
             PlayDustEffect();
             RotatePacStudent(direction);
         }else{
@@ -257,14 +254,6 @@ public class PacStudentController : MonoBehaviour
             effect.Play();
             Destroy(effect.gameObject, effect.main.duration); // Clean up the effect after it finishes
         }
-    }
-
-    private void PlayMovementAudio()
-    {
-        if (!NotEating.isPlaying)
-            NotEating.Play();
-        else
-            Eating.Play();
     }
 
     private void PlayDustEffect()
