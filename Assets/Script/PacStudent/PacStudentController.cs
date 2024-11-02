@@ -24,10 +24,6 @@ public class PacStudentController : MonoBehaviour
 
     private float cellSize = 1f;         // Size of each cell in world units
 
-    // Cooldown for wall collision handling
-    private float wallCollisionCooldown = 0.5f; // Cooldown duration in seconds
-    private float lastCollisionTime = 0f; // Tracks the last time a collision was handled
-
     // Define the base map (top-left quadrant) to be mirrored
     private int[,] levelMap = {
         {1,2,2,2,2,2,2,2,2,2,2,2,2,7},
@@ -93,6 +89,7 @@ public class PacStudentController : MonoBehaviour
     private void Update()
     {
         HandleInput();
+        HandleTeleport();
 
         if (!isLerping)
         {
@@ -173,6 +170,29 @@ public class PacStudentController : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void HandleTeleport()
+    {
+        Vector2Int gridPosition = GetGridPositionFromWorld(transform.position);
+
+        // Check for left teleport zone
+        if (gridPosition.x <= 0)
+        {
+            TeleportToOtherSide(new Vector2Int(levelMap.GetLength(1) - 2, gridPosition.y));
+        }
+        // Check for right teleport zone
+        else if (gridPosition.x >= levelMap.GetLength(1) - 1)
+        {
+            TeleportToOtherSide(new Vector2Int(1, gridPosition.y));
+        }
+    }
+
+    private void TeleportToOtherSide(Vector2Int newGridPosition)
+    {
+        Vector3 newWorldPosition = GetWorldPositionFromGrid(newGridPosition);
+        transform.position = newWorldPosition;
+        targetPosition = GetAdjacentWorldPosition(currentInput);
     }
 
     private Vector2Int GetGridPositionFromWorld(Vector3 worldPosition)
