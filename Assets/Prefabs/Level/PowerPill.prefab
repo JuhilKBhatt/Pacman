@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 938809190420490756}
   - component: {fileID: 1997734749430718401}
   - component: {fileID: 4639937305411076984}
+  - component: {fileID: 3794472595333790231}
   m_Layer: 8
   m_Name: PowerPill
-  m_TagString: Pellet
+  m_TagString: PowerPill
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -142,3 +143,15 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &3794472595333790231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 358765987230945891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cff007086ccb4dcb97d424e56c3106f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

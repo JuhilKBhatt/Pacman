@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMPro; // If you're using TextMeshPro for UI text
+using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
