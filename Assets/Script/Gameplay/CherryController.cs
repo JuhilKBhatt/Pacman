@@ -37,11 +37,14 @@ public class CherryController : MonoBehaviour
         // Instantiate the cherry and set its initial position
         GameObject cherry = Instantiate(cherryPrefab, spawnPosition, Quaternion.identity);
 
+        // Define the center point of the level
+        Vector2 centerPosition = Vector2.zero;
+
         // Calculate the target position on the opposite side of the screen
         Vector2 targetPosition = GetOppositeSidePosition(spawnPosition);
 
-        // Start moving the cherry toward the target position
-        StartCoroutine(MoveCherry(cherry, targetPosition));
+        // Start moving the cherry in two phases: to the center, then to the target
+        StartCoroutine(MoveCherry(cherry, centerPosition, targetPosition));
     }
 
     private Vector2 GetRandomSpawnPositionOutsideCamera()
@@ -80,21 +83,23 @@ public class CherryController : MonoBehaviour
             return new Vector2(spawnPosition.x, mainCamera.transform.position.y - cameraHeight / 2 - 1);
     }
 
-    private IEnumerator MoveCherry(GameObject cherry, Vector2 targetPosition)
+    private IEnumerator MoveCherry(GameObject cherry, Vector2 centerPosition, Vector2 targetPosition)
     {
-        while (cherry != null)
+        // Phase 1: Move the cherry towards the center
+        while (Vector2.Distance(cherry.transform.position, centerPosition) > 0.1f)
         {
-            // Lerp the cherry's position toward the target position
-            cherry.transform.position = Vector2.MoveTowards(cherry.transform.position, targetPosition, moveSpeed * Time.deltaTime);
-
-            // Check if the cherry has reached the target
-            if (Vector2.Distance(cherry.transform.position, targetPosition) < 0.1f)
-            {
-                Destroy(cherry); // Destroy the cherry when it reaches the opposite side
-                yield break;
-            }
-
+            cherry.transform.position = Vector2.MoveTowards(cherry.transform.position, centerPosition, moveSpeed * Time.deltaTime);
             yield return null;
         }
+
+        // Phase 2: Move the cherry from the center to the opposite side
+        while (cherry != null && Vector2.Distance(cherry.transform.position, targetPosition) > 0.1f)
+        {
+            cherry.transform.position = Vector2.MoveTowards(cherry.transform.position, targetPosition, moveSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        // Destroy the cherry once it reaches the opposite side
+        Destroy(cherry);
     }
 }
