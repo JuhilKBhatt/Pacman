@@ -48,7 +48,6 @@ public class PacStudentController : MonoBehaviour
     {
         // Calculate PacStudent's starting position
         targetPosition = GetWorldPositionFromGrid(startingGridPosition);
-        transform.position = targetPosition;
     }
 
     private void Update()
@@ -145,14 +144,27 @@ public class PacStudentController : MonoBehaviour
 
     private void RotatePacStudent(KeyCode direction)
     {
+        // Rotate PacStudent based on movement direction
         if (direction == KeyCode.W)
-            transform.rotation = Quaternion.Euler(0, 0, 90);
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 90); // Up
+            transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
+        }
         else if (direction == KeyCode.A)
-            transform.rotation = Quaternion.Euler(0, 0, 180);
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0); // Left (rotation remains 0)
+            transform.localScale = new Vector3(-1, 1, 1); // Flip on X-axis
+        }
         else if (direction == KeyCode.S)
-            transform.rotation = Quaternion.Euler(0, 0, 270);
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 270); // Down
+            transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
+        }
         else if (direction == KeyCode.D)
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0); // Right
+            transform.localScale = new Vector3(1, 1, 1); // Reset scale for correct orientation
+        }
     }
 
     private void PlayMovementAudio()
