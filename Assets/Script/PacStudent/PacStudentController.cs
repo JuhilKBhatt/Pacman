@@ -6,7 +6,8 @@ public class PacStudentController : MonoBehaviour
 {
     public float moveSpeed = 5f;         // Speed of movement
     private Vector3 targetPosition;      // Target position for lerping
-    private bool isLerping = false;      // Indicates if PacStudent is currently moving
+    public bool isLerping { get; private set; } // Indicates if PacStudent is currently moving
+    private Vector3 previousPosition; // Stores the position before lerping
     public Animator animator;            // All Movement Animations
 
     // Sounds
@@ -81,6 +82,7 @@ public class PacStudentController : MonoBehaviour
         levelMap = fullMap;
         // Calculate PacStudent's starting position
         targetPosition = GetWorldPositionFromGrid(startingGridPosition);
+        previousPosition = targetPosition;
     }
 
     private void Update()
@@ -98,6 +100,7 @@ public class PacStudentController : MonoBehaviour
         }
         else
         {
+            previousPosition = transform.position; // Store the position before lerping
             // Smoothly lerp towards the target position
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * moveSpeed);
             
@@ -173,6 +176,13 @@ public class PacStudentController : MonoBehaviour
         float worldX = gridOrigin.x + gridPosition.x * cellSize;
         float worldY = gridOrigin.y - gridPosition.y * cellSize;
         return new Vector3(worldX, worldY, 0);
+    }
+
+    // Public method to stop movement and reset to previous position
+    public void StopMovement()
+    {
+        isLerping = false;
+        transform.position = previousPosition; // Reset to the previous position
     }
 
     private void RotatePacStudent(KeyCode direction)
