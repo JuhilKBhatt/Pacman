@@ -14,8 +14,24 @@ public class GameManager : MonoBehaviour
     public float gameTime;                  // Game timer
     private bool isGameActive = false;      // Track game state
 
+    private static GameManager _instance;
+
+    private void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
+        DontDestroyOnLoad(gameObject);
         // Disable player and ghost movement at the start
         pacStudentController.enabled = false;
 

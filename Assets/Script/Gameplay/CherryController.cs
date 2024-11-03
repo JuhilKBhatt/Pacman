@@ -13,8 +13,13 @@ public class CherryController : MonoBehaviour
 
     private void Start()
     {
-        mainCamera = Camera.main;         // Reference to the main camera
-        spawnTimer = spawnInterval;       // Initialize the spawn timer
+        mainCamera = Camera.main; // Ensure you get the main camera reference
+        if (mainCamera == null)
+        {
+            Debug.LogError("Main camera not found!");
+            return;
+        }
+        spawnTimer = spawnInterval; // Initialize the spawn timer
     }
 
     private void Update()
@@ -28,6 +33,7 @@ public class CherryController : MonoBehaviour
             spawnTimer = spawnInterval;   // Reset the timer
         }
     }
+
 
     private void SpawnCherry()
     {
