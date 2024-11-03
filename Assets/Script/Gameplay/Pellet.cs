@@ -5,22 +5,28 @@ using UnityEngine;
 public class Pellet : MonoBehaviour
 {
     private PelletAndCherryController pelletAndCherryController;
+    private GameManager gameManager;
 
     void Start()
     {
         pelletAndCherryController = FindObjectOfType<PelletAndCherryController>();
+        gameManager = FindObjectOfType<GameManager>(); // Get reference to GameManager
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        // Check if the game is active before processing collision
+        if (gameManager != null && gameManager.IsGameActive())
         {
-            // Check if the current object is a pellet or cherry
-            if (gameObject.CompareTag("Pellet") || gameObject.CompareTag("Cherry"))
+            if (collision.CompareTag("Player"))
             {
-                // Pass this pellet/cherry object to ActivatePellet
-                pelletAndCherryController.ActivatePellet(gameObject);
-                Destroy(gameObject);
+                // Check if the current object is a pellet or cherry
+                if (gameObject.CompareTag("Pellet") || gameObject.CompareTag("Cherry"))
+                {
+                    // Pass this pellet/cherry object to ActivatePellet
+                    pelletAndCherryController.ActivatePellet(gameObject);
+                    Destroy(gameObject);
+                }
             }
         }
     }

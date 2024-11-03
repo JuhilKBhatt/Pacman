@@ -99,4 +99,9 @@ public class GameManager : MonoBehaviour
     {
         return gameTime;
     }
+
+    public bool IsGameActive()
+    {
+        return isGameActive;
+    }
 }
