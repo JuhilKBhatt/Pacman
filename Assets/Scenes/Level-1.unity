@@ -4893,7 +4893,7 @@ MonoBehaviour:
   PacStudentDeath: {fileID: 87494671}
   dustEffect: {fileID: 979830922}
   wallCollisionEffect: {fileID: 757464846}
-  deathEffect: {fileID: 0}
+  deathEffect: {fileID: 1302500131}
 --- !u!50 &73937942
 Rigidbody2D:
   serializedVersion: 4
@@ -5166,6 +5166,7 @@ MonoBehaviour:
   gameTimerText: {fileID: 380634221}
   backgroundMusic: {fileID: 858765288}
   pacStudentController: {fileID: 73937941}
+  gameTime: 0
 --- !u!1 &131093598
 GameObject:
   m_ObjectHideFlags: 0

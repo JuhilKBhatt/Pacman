@@ -23,6 +23,8 @@ public class PacStudentController : MonoBehaviour
     public ParticleSystem wallCollisionEffect; // Reference to the wall collision effect particle system
     public ParticleSystem deathEffect; // Reference to the PacStudent death effect particle system
 
+    public GameManager gameManager; // Reference to the GameManager script
+
     // Track last and current input directions
     private KeyCode lastInput;   
     private KeyCode currentInput; 
@@ -83,12 +85,16 @@ public class PacStudentController : MonoBehaviour
 
     private void Start()
     {
+        if (gameManager == null)
+        {
+            gameManager = FindObjectOfType<GameManager>();
+        }
         // Generate the full 4-quadrant map
         int[,] fullMap = CreateFourQuadrantMap(levelMap);
         levelMap = fullMap;
         // Calculate PacStudent's starting position
         targetPosition = GetWorldPositionFromGrid(startingGridPosition);
-        previousPosition = targetPosition;
+        previousPosition = targetPosition;   
     }
 
     private void Update()
@@ -325,8 +331,9 @@ public class PacStudentController : MonoBehaviour
         }
         else
         {
-            // Handle game over (implement according to your game flow)
-            GameOver();
+            // Game Over
+            // Call the GameOver method on the instance of GameManager
+            gameManager.GameOver();
         }
     }
 
@@ -355,22 +362,5 @@ public class PacStudentController : MonoBehaviour
 
         // Reset death state
         isDead = false;
-    }
-    private void GameOver()
-    {
-        // Get the GameManager instance and retrieve the timer
-        GameManager gameManager = FindObjectOfType<GameManager>();
-
-        if (gameManager != null)
-        {
-            float finalTime = gameManager.gameTime;
-            string timeString = gameManager.gameTimerText.text;
-            
-            // Save the high score and time
-            ScoreManager.Instance.SaveHighScore(ScoreManager.Instance.playerScore, timeString);
-            
-            Debug.Log("Game Over. Final Time: " + timeString);
-            // Add scene transition or game reset code here
-        }
     }
 }

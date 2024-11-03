@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void GameOver()
+    public void GameOver()
     {
         string finalTime = gameTimerText.text;
 
