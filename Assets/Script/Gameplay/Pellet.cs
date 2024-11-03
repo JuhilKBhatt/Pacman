@@ -4,29 +4,24 @@ using UnityEngine;
 
 public class Pellet : MonoBehaviour
 {
-    private PelletAndCherryController PelletAndCherryController;
+    private PelletAndCherryController pelletAndCherryController;
 
     void Start()
     {
-        // Find the PelletAndCherryController component in the scene
-        PelletAndCherryController = FindObjectOfType<PelletAndCherryController>();
-        if (PelletAndCherryController == null)
-        {
-            Debug.LogError("PelletAndCherryController not found in the scene!");
-        }
+        pelletAndCherryController = FindObjectOfType<PelletAndCherryController>();
     }
-
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Check if the colliding object is PacStudent
         if (collision.CompareTag("Player"))
         {
-            // Activate Pellet effect through the controller
-            PelletAndCherryController.ActivatePellet();
-
-            // Destroy the Pellet after activation
-            Destroy(gameObject);
+            // Check if the current object is a pellet or cherry
+            if (gameObject.CompareTag("Pellet") || gameObject.CompareTag("Cherry"))
+            {
+                // Pass this pellet/cherry object to ActivatePellet
+                pelletAndCherryController.ActivatePellet(gameObject);
+                Destroy(gameObject);
+            }
         }
     }
 }

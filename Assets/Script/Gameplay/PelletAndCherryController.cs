@@ -11,42 +11,35 @@ public class PelletAndCherryController : MonoBehaviour
     public AudioSource notEatingPelletSFX;
     public AudioSource eatingPelletSFX;
 
-    public void ActivatePellet()
+    // Method to handle pellet or cherry activation
+    public void ActivatePellet(GameObject collectedObject)
     {
-        Debug.Log("ActivatePellet() called.");
-
-        // Check the tag of the object being collided with to determine if it's a pellet or a cherry
-        if (gameObject.CompareTag("Pellet"))
+        if (collectedObject.CompareTag("Pellet"))
         {
             ScoreManager.Instance.AddScore(pelletScore);
-            Debug.Log("Pellet collected, adding score: " + pelletScore);
 
             if (eatingPelletSFX != null)
             {
-                Debug.Log("Playing eating pellet sound.");
                 eatingPelletSFX.Play();
             }
-            else
-            {
-                Debug.LogWarning("EatingPalletSFX is not assigned!");
-            }
         }
-        else if (gameObject.CompareTag("Cherry"))
+        else if (collectedObject.CompareTag("Cherry"))
         {
             ScoreManager.Instance.AddScore(cherryScore);
-            Debug.Log("Cherry collected, adding score: " + cherryScore);
 
-            if (notEatingPelletSFX != null)
+            if (eatingPelletSFX != null)
             {
-                Debug.Log("Playing not eating pellet sound.");
-                notEatingPelletSFX.Play();
+                eatingPelletSFX.Play();
             }
-            else
-            {
-                Debug.LogWarning("NotEatingPelletSFX is not assigned!");
-            }
-        }else {
-            Debug.LogWarning("Object is not a pellet or a cherry!");
+        }
+    }
+
+    // Method to play "not eating" sound
+    public void PlayNotEatingSound()
+    {
+        if (notEatingPelletSFX != null)
+        {
+            notEatingPelletSFX.Play();
         }
     }
 }
