@@ -20,18 +20,24 @@ public class PowerPillController : MonoBehaviour
     // Called by PowerPill when PacStudent collides with it
     public void ActivatePowerPill()
     {
-        // Start the Power Pill effect
-        StartCoroutine(PowerPillEffect());
+        StartCoroutine(PowerPillEffect());  // Start the Power Pill effect
     }
 
     private IEnumerator PowerPillEffect()
     {
-        // Activate Scared state and play scared music
+        // Set all ghosts to Scared state and start scared music
         foreach (Animator ghostAnimator in ghostAnimators)
         {
-            ghostAnimator.SetTrigger("Scared");
+            if (ghostAnimator != null)
+            {
+                ghostAnimator.SetTrigger("Scared");
+            }
         }
-        scaredMusic.Play();
+
+        if (scaredMusic != null)
+        {
+            scaredMusic.Play();
+        }
 
         // Show timer UI and set the timer
         ghostTimerUI.gameObject.SetActive(true);
@@ -39,9 +45,8 @@ public class PowerPillController : MonoBehaviour
 
         while (timer > 0)
         {
-            // Update the timer UI
             ghostTimerUI.text = "Time Left: " + Mathf.Ceil(timer).ToString();
-            
+
             // Decrease the timer
             timer -= Time.deltaTime;
 
@@ -50,7 +55,10 @@ public class PowerPillController : MonoBehaviour
             {
                 foreach (Animator ghostAnimator in ghostAnimators)
                 {
-                    ghostAnimator.SetTrigger("Recovering");
+                    if (ghostAnimator != null)
+                    {
+                        ghostAnimator.SetTrigger("Recovering");
+                    }
                 }
             }
 
@@ -60,11 +68,18 @@ public class PowerPillController : MonoBehaviour
         // After the timer runs out, reset the ghosts to their normal state
         foreach (Animator ghostAnimator in ghostAnimators)
         {
-            ghostAnimator.SetTrigger("Walking");
+            if (ghostAnimator != null)
+            {
+                ghostAnimator.SetTrigger("Walking");
+            }
         }
 
         // Hide timer UI and stop scared music
         ghostTimerUI.gameObject.SetActive(false);
-        scaredMusic.Stop();
+
+        if (scaredMusic != null)
+        {
+            scaredMusic.Stop();
+        }
     }
 }
