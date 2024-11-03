@@ -26,26 +26,22 @@ public class ScoreManager : MonoBehaviour
         UpdateScoreUI();
     }
 
-    public void AddScore(int points)
-    {
+    public void AddScore(int points){
         playerScore += points;
         UpdateScoreUI();
     }
 
-    private void UpdateScoreUI()
-    {
-        if (scoreText != null)
-        {
-            scoreText.text = "Score: " + playerScore.ToString();
-        }
+    // Update the score UI text
+    private void UpdateScoreUI(){
+        scoreText.text = "Score: " + playerScore.ToString();
     }
 
-    public void SaveHighScore(int score, string timeString)
-    {
+    // Save the high score if it is greater than the current high score
+    public void SaveHighScore(int score, string timeString){
         int highScore = PlayerPrefs.GetInt("HighScore", 0);
 
-        if (score > highScore)
-        {
+        // If the current score is higher than the high score, save the new high score
+        if (score > highScore){
             PlayerPrefs.SetInt("HighScore", score);
             PlayerPrefs.SetString("HighScoreTime", timeString);
             PlayerPrefs.Save();

@@ -4,22 +4,17 @@ using UnityEngine;
 
 public class CherryController : MonoBehaviour
 {
-    public GameObject cherryPrefab;       // Reference to the cherry prefab (2D sprite)
-    public float spawnInterval = 10f;     // Time interval for cherry spawn
-    public float moveSpeed = 3f;          // Speed of cherry movement
+    public GameObject cherryPrefab;
+    public float spawnInterval = 10f;
+    public float moveSpeed = 3f;
 
     private Camera mainCamera;
     private float spawnTimer;
 
     private void Start()
     {
-        mainCamera = Camera.main; // Ensure you get the main camera reference
-        if (mainCamera == null)
-        {
-            Debug.LogError("Main camera not found!");
-            return;
-        }
-        spawnTimer = spawnInterval; // Initialize the spawn timer
+        mainCamera = Camera.main;
+        spawnTimer = spawnInterval;
     }
 
     private void Update()
@@ -30,23 +25,16 @@ public class CherryController : MonoBehaviour
         if (spawnTimer <= 0f)
         {
             SpawnCherry();
-            spawnTimer = spawnInterval;   // Reset the timer
+            spawnTimer = spawnInterval;
         }
     }
 
 
-    private void SpawnCherry()
-    {
-        // Determine a random position outside the camera view
+    // Method to spawn a cherry outside the camera view
+    private void SpawnCherry(){
         Vector2 spawnPosition = GetRandomSpawnPositionOutsideCamera();
-
-        // Instantiate the cherry and set its initial position
         GameObject cherry = Instantiate(cherryPrefab, spawnPosition, Quaternion.identity);
-
-        // Calculate the target position on the opposite side of the screen
         Vector2 targetPosition = GetOppositeSidePosition(spawnPosition);
-
-        // Start moving the cherry directly to the target position
         StartCoroutine(MoveCherry(cherry, targetPosition));
     }
 
@@ -75,7 +63,6 @@ public class CherryController : MonoBehaviour
         float cameraHeight = 2f * mainCamera.orthographicSize;
         float cameraWidth = cameraHeight * mainCamera.aspect;
 
-        // Determine target position on the opposite side of the screen
         if (spawnPosition.x < mainCamera.transform.position.x - cameraWidth / 2) // Left side
             return new Vector2(mainCamera.transform.position.x + cameraWidth / 2 + 1, spawnPosition.y);
         else if (spawnPosition.x > mainCamera.transform.position.x + cameraWidth / 2) // Right side
@@ -86,6 +73,7 @@ public class CherryController : MonoBehaviour
             return new Vector2(spawnPosition.x, mainCamera.transform.position.y - cameraHeight / 2 - 1);
     }
 
+    // Coroutine to move the cherry to the target position
     private IEnumerator MoveCherry(GameObject cherry, Vector2 targetPosition)
     {
         // Move the cherry directly to the target position
@@ -95,7 +83,6 @@ public class CherryController : MonoBehaviour
             yield return null;
         }
 
-        // Final check before destroying the cherry to prevent errors
         if (cherry != null)
         {
             Destroy(cherry);

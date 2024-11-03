@@ -23,27 +23,22 @@ public class GameManager : MonoBehaviour
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
-        else
-        {
+        else{
             Destroy(gameObject);
         }
     }
 
-    private void Start()
-    {
+    private void Start(){
         DontDestroyOnLoad(gameObject);
         // Disable player and ghost movement at the start
         pacStudentController.enabled = false;
-
-        // Start the countdown
         StartCoroutine(CountdownAndStartGame());
     }
 
     private IEnumerator CountdownAndStartGame()
     {
         int countdown = 3;
-        while (countdown > 0)
-        {
+        while (countdown > 0){
             countdownText.text = countdown.ToString();
             yield return new WaitForSeconds(1f);
             countdown--;
@@ -72,10 +67,8 @@ public class GameManager : MonoBehaviour
             backgroundMusic.Play();
         }
     }
-    private void Update()
-    {
-        if (isGameActive)
-        {
+    private void Update(){
+        if (isGameActive){
             gameTime += Time.deltaTime;
 
             int minutes = Mathf.FloorToInt(gameTime / 60F);
@@ -86,20 +79,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Game over function
     public void GameOver()
     {
         string finalTime = gameTimerText.text;
-
         ScoreManager.Instance.SaveHighScore(ScoreManager.Instance.playerScore, finalTime);
-
-        Debug.Log("Game Over. Final Score: " + ScoreManager.Instance.playerScore);
     }
 
-    public float GetGameTime()
-    {
+    // Getters
+    public float GetGameTime(){
         return gameTime;
     }
 
+    // Check if the game is active
     public bool IsGameActive()
     {
         return isGameActive;
