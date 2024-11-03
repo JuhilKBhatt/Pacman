@@ -353,8 +353,8 @@ public class PacStudentController : MonoBehaviour
             animator.SetTrigger("Revive");
         }
 
-        // Wait until revive animation starts, then reset PacStudent's position to the starting point
-        transform.position = GetWorldPositionFromGrid(startingGridPosition);
+        // Set PacStudent's position to the specified respawn coordinates (-14, 13, 0)
+        transform.position = new Vector3(-14, 13, 0);
         targetPosition = transform.position;
 
         // Show PacStudent sprite again
