@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class PelletAndCherryController : MonoBehaviour
 {
-    public int pelletScore = 10;    // Points awarded for eating a pellet
-    public int cherryScore = 100;   // Points awarded for eating a cherry
+    public int pelletScore = 10;
+    public int cherryScore = 100;
 
-    // Sounds
     public AudioSource notEatingPelletSFX;
     public AudioSource eatingPelletSFX;
 
@@ -18,13 +17,11 @@ public class PelletAndCherryController : MonoBehaviour
         {
             ScoreManager.Instance.AddScore(pelletScore);
 
-            if (eatingPelletSFX != null)
-            {
+            if (eatingPelletSFX != null){
                 eatingPelletSFX.Play();
             }
         }
-        else if (collectedObject.CompareTag("Cherry"))
-        {
+        else if (collectedObject.CompareTag("Cherry")){
             ScoreManager.Instance.AddScore(cherryScore);
 
             if (eatingPelletSFX != null)
@@ -34,9 +31,7 @@ public class PelletAndCherryController : MonoBehaviour
         }
     }
 
-    // Method to play "not eating" sound
-    public void PlayNotEatingSound()
-    {
+    public void PlayNotEatingSound(){
         if (notEatingPelletSFX != null)
         {
             notEatingPelletSFX.Play();

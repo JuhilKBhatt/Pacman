@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PowerPill : MonoBehaviour
 {
+    // Reference to the PowerPillController in the scene
     private PowerPillController powerPillController;
 
     private void Start()
@@ -12,9 +13,7 @@ public class PowerPill : MonoBehaviour
         powerPillController = FindObjectOfType<PowerPillController>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        // Check if the colliding object is PacStudent
+    private void OnTriggerEnter2D(Collider2D collision){
         if (collision.CompareTag("Player") && powerPillController != null)
         {
             // Activate Power Pill effect through the controller

@@ -4,15 +4,14 @@ using TMPro;
 
 public class PowerPillController : MonoBehaviour
 {
-    public Animator[] ghostAnimators;       // Array of Ghost animators
-    public AudioSource scaredMusic;         // Scared mode background music
-    public TextMeshProUGUI ghostTimerUI;    // UI Text for displaying timer
-    public float powerPillDuration = 10f;   // Total duration of power pill effect
+    public Animator[] ghostAnimators;
+    public AudioSource scaredMusic;
+    public TextMeshProUGUI ghostTimerUI;
+    public float powerPillDuration = 10f;
 
-    private float timer;                    // Internal timer for countdown
+    private float timer;
 
-    private void Start()
-    {
+    private void Start(){
         // Ensure the timer UI is hidden initially
         ghostTimerUI.gameObject.SetActive(false);
     }
@@ -20,7 +19,7 @@ public class PowerPillController : MonoBehaviour
     // Called by PowerPill when PacStudent collides with it
     public void ActivatePowerPill()
     {
-        StartCoroutine(PowerPillEffect());  // Start the Power Pill effect
+        StartCoroutine(PowerPillEffect());
     }
 
     private IEnumerator PowerPillEffect()
@@ -28,8 +27,7 @@ public class PowerPillController : MonoBehaviour
         // Set all ghosts to Scared state and start scared music
         foreach (Animator ghostAnimator in ghostAnimators)
         {
-            if (ghostAnimator != null)
-            {
+            if (ghostAnimator != null){
                 ghostAnimator.SetTrigger("Scared");
             }
         }
@@ -43,8 +41,7 @@ public class PowerPillController : MonoBehaviour
         ghostTimerUI.gameObject.SetActive(true);
         timer = powerPillDuration;
 
-        while (timer > 0)
-        {
+        while (timer > 0){
             ghostTimerUI.text = "Time Left: " + Mathf.Ceil(timer).ToString() + " sec";
 
             // Decrease the timer
@@ -66,10 +63,8 @@ public class PowerPillController : MonoBehaviour
         }
 
         // After the timer runs out, reset the ghosts to their normal state
-        foreach (Animator ghostAnimator in ghostAnimators)
-        {
-            if (ghostAnimator != null)
-            {
+        foreach (Animator ghostAnimator in ghostAnimators){
+            if (ghostAnimator != null){
                 ghostAnimator.SetTrigger("Walking");
             }
         }
@@ -77,8 +72,7 @@ public class PowerPillController : MonoBehaviour
         // Hide timer UI and stop scared music
         ghostTimerUI.gameObject.SetActive(false);
 
-        if (scaredMusic != null)
-        {
+        if (scaredMusic != null){
             scaredMusic.Stop();
         }
     }

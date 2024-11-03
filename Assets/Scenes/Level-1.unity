@@ -4801,7 +4801,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.55
 --- !u!212 &73937938
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4894,6 +4894,7 @@ MonoBehaviour:
   dustEffect: {fileID: 979830922}
   wallCollisionEffect: {fileID: 757464846}
   deathEffect: {fileID: 1302500131}
+  gameManager: {fileID: 0}
 --- !u!50 &73937942
 Rigidbody2D:
   serializedVersion: 4
