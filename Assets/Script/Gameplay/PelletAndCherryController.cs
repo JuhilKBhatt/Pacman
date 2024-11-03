@@ -2,34 +2,51 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PelletController : MonoBehaviour
+public class PelletAndCherryController : MonoBehaviour
 {
     public int pelletScore = 10;    // Points awarded for eating a pellet
     public int cherryScore = 100;   // Points awarded for eating a cherry
 
     // Sounds
-    public AudioSource NotEating;
-    public AudioSource Eating;
+    public AudioSource notEatingPelletSFX;
+    public AudioSource eatingPelletSFX;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void ActivatePellet()
     {
-        if (other.CompareTag("Player"))
+        Debug.Log("ActivatePellet() called.");
+
+        // Check the tag of the object being collided with to determine if it's a pellet or a cherry
+        if (gameObject.CompareTag("Pellet"))
         {
-            // Check the tag of the object being collided with to determine if it's a pellet or a cherry
-            if (gameObject.CompareTag("Pellet"))
+            ScoreManager.Instance.AddScore(pelletScore);
+            Debug.Log("Pellet collected, adding score: " + pelletScore);
+
+            if (eatingPelletSFX != null)
             {
-                ScoreManager.Instance.AddScore(pelletScore);
-                Destroy(gameObject);  // Destroy the pellet
-                Eating.Play();
-            }else{
-                NotEating.Play();
+                Debug.Log("Playing eating pellet sound.");
+                eatingPelletSFX.Play();
             }
-            
-            if (gameObject.CompareTag("Cherry"))
+            else
             {
-                ScoreManager.Instance.AddScore(cherryScore);
-                Destroy(gameObject);  // Destroy the cherry
+                Debug.LogWarning("EatingPalletSFX is not assigned!");
             }
+        }
+        else if (gameObject.CompareTag("Cherry"))
+        {
+            ScoreManager.Instance.AddScore(cherryScore);
+            Debug.Log("Cherry collected, adding score: " + cherryScore);
+
+            if (notEatingPelletSFX != null)
+            {
+                Debug.Log("Playing not eating pellet sound.");
+                notEatingPelletSFX.Play();
+            }
+            else
+            {
+                Debug.LogWarning("NotEatingPelletSFX is not assigned!");
+            }
+        }else {
+            Debug.LogWarning("Object is not a pellet or a cherry!");
         }
     }
 }

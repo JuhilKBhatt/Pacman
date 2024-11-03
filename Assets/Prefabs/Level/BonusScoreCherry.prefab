@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5718556095732595519}
   - component: {fileID: 3722772123072681116}
   - component: {fileID: 1179964728858323072}
-  - component: {fileID: -1163938327596305305}
+  - component: {fileID: -5774680421648127438}
   m_Layer: 8
   m_Name: BonusScoreCherry
   m_TagString: Cherry
@@ -143,7 +143,7 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &-1163938327596305305
+--- !u!114 &-5774680421648127438
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,8 +152,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8960431495040547541}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d08c523779b4a428fa2588acd3f19b34, type: 3}
+  m_Script: {fileID: 11500000, guid: d67b82f2dbba14d978cca436d527faf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreValue: 10
-  scoreText: {fileID: 0}

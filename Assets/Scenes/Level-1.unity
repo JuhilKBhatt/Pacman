@@ -4925,6 +4925,7 @@ GameObject:
   - component: {fileID: 125724217}
   - component: {fileID: 125724219}
   - component: {fileID: 125724220}
+  - component: {fileID: 125724221}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4996,6 +4997,22 @@ MonoBehaviour:
   scaredMusic: {fileID: 963872394}
   ghostTimerUI: {fileID: 1640286875}
   powerPillDuration: 10
+--- !u!114 &125724221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125724215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d08c523779b4a428fa2588acd3f19b34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pelletScore: 10
+  cherryScore: 100
+  notEatingPelletSFX: {fileID: 858765288}
+  eatingPelletSFX: {fileID: 684490891}
 --- !u!1 &131093598
 GameObject:
   m_ObjectHideFlags: 0
@@ -11280,8 +11297,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 858765287}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.494188, y: -3.1346056, z: 0.88265246}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
