@@ -1,0 +1,74 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class GameManager : MonoBehaviour
+{
+    public TextMeshProUGUI countdownText;   // Reference to Countdown TMPro text
+    public TextMeshProUGUI gameTimerText;   // Reference to Timer TMPro text
+    public AudioSource backgroundMusic;     // Audio source for the music loop
+    public PacStudentController pacStudentController; // Reference to player controller
+
+    private float gameTime;                 // Game timer
+    private bool isGameActive = false;      // Track game state
+
+    private void Start()
+    {
+        // Disable player and ghost movement at the start
+        pacStudentController.enabled = false;
+
+        // Start the countdown
+        StartCoroutine(CountdownAndStartGame());
+    }
+
+    private IEnumerator CountdownAndStartGame()
+    {
+        int countdown = 3;
+        while (countdown > 0)
+        {
+            countdownText.text = countdown.ToString();
+            yield return new WaitForSeconds(1f);
+            countdown--;
+        }
+
+        // Display "GO!" for 1 second before starting the game
+        countdownText.text = "GO!";
+        yield return new WaitForSeconds(1f);
+        countdownText.gameObject.SetActive(false);
+
+        // Enable game mechanics
+        StartGame();
+    }
+    private void StartGame()
+    {
+        isGameActive = true;
+        gameTime = 0;
+
+        // Enable player and ghost movement
+        pacStudentController.enabled = true;
+
+        // Start background music
+        if (backgroundMusic != null)
+        {
+            backgroundMusic.loop = true;
+            backgroundMusic.Play();
+        }
+    }
+    private void Update()
+    {
+        if (isGameActive)
+        {
+            gameTime += Time.deltaTime;
+
+            // Calculate minutes, seconds, and milliseconds
+            int minutes = Mathf.FloorToInt(gameTime / 60F);
+            int seconds = Mathf.FloorToInt(gameTime % 60F);
+            int milliseconds = Mathf.FloorToInt((gameTime * 100F) % 100F);
+
+            // Update the timer UI in MM:SS:MS format
+            gameTimerText.text = $"{minutes:00}:{seconds:00}:{milliseconds:00}";
+        }
+    }
+}
