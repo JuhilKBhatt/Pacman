@@ -10,12 +10,18 @@ public class PacStudentController : MonoBehaviour
     private Vector3 previousPosition; // Stores the position before lerping
     public Animator animator;            // All Movement Animations
 
+    public int lives = 3;                // Number of lives
+    public GameObject[] lifeImages;     // Array of life images
+    private bool isDead = false;        // Indicates if PacStudent is dead
+    public GameObject pacStudentSprite; // Reference to the PacStudent sprite object
+
     // Sounds
     public AudioSource WallCollision;
+    public AudioSource PacStudentDeath;
 
     public ParticleSystem dustEffect;    // Reference to the dust effect particle system
     public ParticleSystem wallCollisionEffect; // Reference to the wall collision effect particle system
-    public ParticleSystem PacStudentDeathEffect; // Reference to the PacStudent death effect particle system
+    public ParticleSystem deathEffect; // Reference to the PacStudent death effect particle system
 
     // Track last and current input directions
     private KeyCode lastInput;   
@@ -275,5 +281,79 @@ public class PacStudentController : MonoBehaviour
             dustEffect.transform.rotation = Quaternion.identity;
             dustEffect.Play();
         }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // Check if collided object is tagged as "Ghost"
+        if (other.CompareTag("Ghost") && !isDead)
+        {
+            HandleDeath();
+        }
+    }
+
+    private void HandleDeath()
+    {
+        isDead = true;
+        lives--;
+
+        // Play the death animation trigger
+        if (animator != null)
+        {
+            animator.SetTrigger("Death");
+        }
+
+        // Play the death particle effect at the current position
+        if (deathEffect != null)
+        {
+            ParticleSystem effect = Instantiate(deathEffect, transform.position, Quaternion.identity);
+            effect.Play();
+            Destroy(effect.gameObject, effect.main.duration); // Clean up after effect finishes
+        }
+
+        // Hide PacStudent sprite during death animation
+        pacStudentSprite.SetActive(false);
+
+        // Update the life UI
+        UpdateLifeUI();
+
+        // Check if lives are remaining
+        if (lives > 0)
+        {
+            // Respawn after a short delay to allow the Death animation to finish
+            Invoke(nameof(Respawn), 2f); // Adjust delay as needed
+        }
+        else
+        {
+            // Handle game over (implement according to your game flow)
+            Debug.Log("Game Over");
+        }
+    }
+
+    private void UpdateLifeUI()
+    {
+        for (int i = 0; i < lifeImages.Length; i++)
+        {
+            lifeImages[i].SetActive(i < lives); // Activate the UI images up to the current life count
+        }
+    }
+
+    private void Respawn()
+    {
+        // Play the revive animation trigger before making PacStudent visible
+        if (animator != null)
+        {
+            animator.SetTrigger("Revive");
+        }
+
+        // Wait until revive animation starts, then reset PacStudent's position to the starting point
+        transform.position = GetWorldPositionFromGrid(startingGridPosition);
+        targetPosition = transform.position;
+
+        // Show PacStudent sprite again
+        pacStudentSprite.SetActive(true);
+
+        // Reset death state
+        isDead = false;
     }
 }

@@ -13,6 +13,7 @@ TagManager:
   - BlueGhost
   - OrangeGhost
   - RedGhost
+  - Ghost
   layers:
   - Default
   - TransparentFX
