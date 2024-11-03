@@ -86,7 +86,7 @@ public class CherryController : MonoBehaviour
     private IEnumerator MoveCherry(GameObject cherry, Vector2 centerPosition, Vector2 targetPosition)
     {
         // Phase 1: Move the cherry towards the center
-        while (Vector2.Distance(cherry.transform.position, centerPosition) > 0.1f)
+        while (cherry != null && Vector2.Distance(cherry.transform.position, centerPosition) > 0.1f)
         {
             cherry.transform.position = Vector2.MoveTowards(cherry.transform.position, centerPosition, moveSpeed * Time.deltaTime);
             yield return null;
@@ -99,7 +99,10 @@ public class CherryController : MonoBehaviour
             yield return null;
         }
 
-        // Destroy the cherry once it reaches the opposite side
-        Destroy(cherry);
+        // Final check before destroying the cherry to prevent errors
+        if (cherry != null)
+        {
+            Destroy(cherry);
+        }
     }
 }
