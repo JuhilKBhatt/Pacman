@@ -45,7 +45,7 @@ public class PowerPillController : MonoBehaviour
 
         while (timer > 0)
         {
-            ghostTimerUI.text = "Time Left: " + Mathf.Ceil(timer).ToString();
+            ghostTimerUI.text = "Time Left: " + Mathf.Ceil(timer).ToString() + " sec";
 
             // Decrease the timer
             timer -= Time.deltaTime;

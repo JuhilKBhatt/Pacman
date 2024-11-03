@@ -12,6 +12,6 @@ public class StartScreenController : MonoBehaviour
 
     public void LoadLevel2()
     {
-        SceneManager.LoadScene("Level-2");
+        //SceneManager.LoadScene("Level-2");
     }
 }

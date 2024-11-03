@@ -37,14 +37,11 @@ public class CherryController : MonoBehaviour
         // Instantiate the cherry and set its initial position
         GameObject cherry = Instantiate(cherryPrefab, spawnPosition, Quaternion.identity);
 
-        // Define the center point of the level
-        Vector2 centerPosition = Vector2.zero;
-
         // Calculate the target position on the opposite side of the screen
         Vector2 targetPosition = GetOppositeSidePosition(spawnPosition);
 
-        // Start moving the cherry in two phases: to the center, then to the target
-        StartCoroutine(MoveCherry(cherry, centerPosition, targetPosition));
+        // Start moving the cherry directly to the target position
+        StartCoroutine(MoveCherry(cherry, targetPosition));
     }
 
     private Vector2 GetRandomSpawnPositionOutsideCamera()
@@ -83,16 +80,9 @@ public class CherryController : MonoBehaviour
             return new Vector2(spawnPosition.x, mainCamera.transform.position.y - cameraHeight / 2 - 1);
     }
 
-    private IEnumerator MoveCherry(GameObject cherry, Vector2 centerPosition, Vector2 targetPosition)
+    private IEnumerator MoveCherry(GameObject cherry, Vector2 targetPosition)
     {
-        // Phase 1: Move the cherry towards the center
-        while (cherry != null && Vector2.Distance(cherry.transform.position, centerPosition) > 0.1f)
-        {
-            cherry.transform.position = Vector2.MoveTowards(cherry.transform.position, centerPosition, moveSpeed * Time.deltaTime);
-            yield return null;
-        }
-
-        // Phase 2: Move the cherry from the center to the opposite side
+        // Move the cherry directly to the target position
         while (cherry != null && Vector2.Distance(cherry.transform.position, targetPosition) > 0.1f)
         {
             cherry.transform.position = Vector2.MoveTowards(cherry.transform.position, targetPosition, moveSpeed * Time.deltaTime);
