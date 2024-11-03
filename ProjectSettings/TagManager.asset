@@ -5,6 +5,15 @@ TagManager:
   serializedVersion: 2
   tags:
   - MapTile
+  - Cherry
+  - Pellet
+  - PowerPill
+  - ScoreText
+  - PinkGhost
+  - BlueGhost
+  - OrangeGhost
+  - RedGhost
+  - Ghost
   layers:
   - Default
   - TransparentFX
