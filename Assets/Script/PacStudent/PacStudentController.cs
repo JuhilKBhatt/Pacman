@@ -15,6 +15,7 @@ public class PacStudentController : MonoBehaviour
 
     public ParticleSystem dustEffect;    // Reference to the dust effect particle system
     public ParticleSystem wallCollisionEffect; // Reference to the wall collision effect particle system
+    public ParticleSystem PacStudentDeathEffect; // Reference to the PacStudent death effect particle system
 
     // Track last and current input directions
     private KeyCode lastInput;   
