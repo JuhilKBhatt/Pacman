@@ -84,6 +84,8 @@ public class GameManager : MonoBehaviour
     {
         string finalTime = gameTimerText.text;
         ScoreManager.Instance.SaveHighScore(ScoreManager.Instance.playerScore, finalTime);
+
+        gameTimerText.text = "Game Over!";
     }
 
     // Getters
