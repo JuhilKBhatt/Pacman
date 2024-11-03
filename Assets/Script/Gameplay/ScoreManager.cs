@@ -3,22 +3,21 @@ using TMPro;
 
 public class ScoreManager : MonoBehaviour
 {
-    public static ScoreManager Instance; // Singleton instance for easy access
+    public static ScoreManager Instance;
 
-    public int playerScore = 0; // Player's current score
-    public TextMeshProUGUI scoreText; // Reference to the UI Text component
+    public int playerScore = 0;
+    public TextMeshProUGUI scoreText;
 
     private void Awake()
     {
-        // Implementing Singleton pattern
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Keep this object alive across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Destroy duplicate instance
+            Destroy(gameObject);
         }
     }
 
@@ -38,6 +37,18 @@ public class ScoreManager : MonoBehaviour
         if (scoreText != null)
         {
             scoreText.text = "Score: " + playerScore.ToString();
+        }
+    }
+
+    public void SaveHighScore(int score, string timeString)
+    {
+        int highScore = PlayerPrefs.GetInt("HighScore", 0);
+
+        if (score > highScore)
+        {
+            PlayerPrefs.SetInt("HighScore", score);
+            PlayerPrefs.SetString("HighScoreTime", timeString);
+            PlayerPrefs.Save();
         }
     }
 }

@@ -326,7 +326,7 @@ public class PacStudentController : MonoBehaviour
         else
         {
             // Handle game over (implement according to your game flow)
-            Debug.Log("Game Over");
+            GameOver();
         }
     }
 
@@ -355,5 +355,22 @@ public class PacStudentController : MonoBehaviour
 
         // Reset death state
         isDead = false;
+    }
+    private void GameOver()
+    {
+        // Get the GameManager instance and retrieve the timer
+        GameManager gameManager = FindObjectOfType<GameManager>();
+
+        if (gameManager != null)
+        {
+            float finalTime = gameManager.gameTime;
+            string timeString = gameManager.gameTimerText.text;
+            
+            // Save the high score and time
+            ScoreManager.Instance.SaveHighScore(ScoreManager.Instance.playerScore, timeString);
+            
+            Debug.Log("Game Over. Final Time: " + timeString);
+            // Add scene transition or game reset code here
+        }
     }
 }

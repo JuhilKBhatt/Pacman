@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public AudioSource backgroundMusic;     // Audio source for the music loop
     public PacStudentController pacStudentController; // Reference to player controller
 
-    private float gameTime;                 // Game timer
+    public float gameTime;                  // Game timer
     private bool isGameActive = false;      // Track game state
 
     private void Start()
@@ -62,13 +62,25 @@ public class GameManager : MonoBehaviour
         {
             gameTime += Time.deltaTime;
 
-            // Calculate minutes, seconds, and milliseconds
             int minutes = Mathf.FloorToInt(gameTime / 60F);
             int seconds = Mathf.FloorToInt(gameTime % 60F);
             int milliseconds = Mathf.FloorToInt((gameTime * 100F) % 100F);
 
-            // Update the timer UI in MM:SS:MS format
             gameTimerText.text = $"{minutes:00}:{seconds:00}:{milliseconds:00}";
         }
+    }
+
+    private void GameOver()
+    {
+        string finalTime = gameTimerText.text;
+
+        ScoreManager.Instance.SaveHighScore(ScoreManager.Instance.playerScore, finalTime);
+
+        Debug.Log("Game Over. Final Score: " + ScoreManager.Instance.playerScore);
+    }
+
+    public float GetGameTime()
+    {
+        return gameTime;
     }
 }
