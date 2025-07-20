@@ -1,0 +1,16 @@
+{
+  "title": "PacStudent",
+  "description": "PacStudent is a Unity project attempting to recreate the classic Pac with no Unity training wheels",
+  "language": ["Unity", "C#"],
+  "liveDemo": "",
+  "images": [
+    "https://res.cloudinary.com/dmj4ggkjq/image/upload/v1752991102/PacStudent-img-1.png",
+    "https://res.cloudinary.com/dmj4ggkjq/image/upload/v1752991103/PacStudent-img-2.png",
+    "https://res.cloudinary.com/dmj4ggkjq/image/upload/v1752991103/PacStudent-img-3.png"
+  ],
+  "videoDemo": "https://res.cloudinary.com/dmj4ggkjq/video/upload/v1752991354/PacStudent-Video_wqoone.mov",
+  "Priority": 3,
+  "type": "Solo",
+  "version": "Beta",
+  "Visibilty": true
+}
