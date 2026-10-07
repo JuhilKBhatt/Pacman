@@ -1,7 +1,20 @@
 {
   "title": "PacStudent",
-  "description": "PacStudent is a Unity project attempting to recreate the classic Pac with no Unity training wheels",
-  "language": ["Unity", "C#"],
+  "description": "A custom 2D arcade recreation of classic Pac-Man developed in Unity with C#, built entirely from scratch without relying on Unity's built-in physics or rigidbodies. Features procedural symmetrical 4-quadrant maze generation, grid-based lerp navigation, custom particle effects, and classic arcade mechanics.",
+  "techStack": {
+    "Frontend": [
+      "Unity"
+    ],
+    "Backend": [
+      "C#",
+      ".NET"
+    ],
+    "AI": [],
+    "DevSecOps": [
+      "GitHub"
+    ],
+    "Test Automation": []
+  },
   "liveDemo": "",
   "images": [
     "https://res.cloudinary.com/dmj4ggkjq/image/upload/v1752991102/PacStudent-img-1.png",
@@ -10,7 +23,15 @@
   ],
   "videoDemo": "https://res.cloudinary.com/dmj4ggkjq/video/upload/v1752991354/PacStudent-Video_wqoone.mov",
   "Priority": 3,
+  "category": "Game",
   "type": "Solo",
   "version": "Beta",
+  "versionNumber": "0.1.0",
+  "Highlights": [
+    "Custom grid-based movement and input buffering system implemented entirely through mathematical lerping without Unity physics or rigidbodies",
+    "Procedural level generator building a full symmetrical 4-quadrant maze from a 2D integer matrix with automated sprite rotation and corner tiling",
+    "Dynamic arcade gameplay loop managing countdown sequences, high scores, life tracking, bonus cherry spawning, and power pellets",
+    "Custom audiovisual feedback featuring particle systems for movement dust, wall collisions, and death animations alongside synchronized sound effects"
+  ],
   "Visibilty": true
 }
